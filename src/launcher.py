@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import pepper_interaction  # Importa o script onde as funções start, command e stop estão
-import face_expression
+import pepper_interaction_and_motors  # Importa o script onde as funções start, command e stop estão
 from pynput import keyboard
 import time
 
@@ -23,10 +22,11 @@ def start_listener():
     return listener
 
 # Loop principal
+listener = None
 try:
     # Chama a função start() para inicializar o robô
-    print("Iniciando pepper_interaction...")
-    pepper_interaction.start()
+    print("Iniciando pepper_interaction_and_motors...")
+    pepper_interaction_and_motors.start()
 
     # Inicia o listener de teclado
     listener = start_listener()
@@ -34,7 +34,8 @@ try:
     while running:
         # Solicita ao usuário os valores para emotion e time
         emotion = raw_input("Digite a emoção (ex: alegria, tristeza): ").strip()
-        
+        if not running:
+            break  # Sai do loop se "Esc" foi pressionada
         if not emotion:  # Verifica se a entrada de emoção está vazia
             print("A emoção não pode estar vazia. Tente novamente.")
             continue  # Reinicia o loop
@@ -46,20 +47,19 @@ try:
             continue  # Pula para a próxima iteração se o valor for inválido
 
         # Chama a função command() para executar o comportamento do robô
-        print("Executing command on the robot with emotion '{}' and interval of {} seconds...".format(emotion, time_interval))
-        face_expression.definir_emocao(emotion)
-        pepper_interaction.command(emotion, time_interval)
-        face_expression.definir_emocao('default')
+        print("Executando comando com emoção '{}' por {} segundos...".format(emotion, time_interval))
+        pepper_interaction_and_motors.command(emotion, time_interval)
 
-        # Intervalo para evitar sobrecarga (ajuste conforme necessário)
+        # Intervalo entre execuções
         time.sleep(2)
 
 finally:
-    # Quando sair do loop, chama a função stop() para finalizar o robô corretamente
-    print("Finalizando pepper_interaction...")
-    pepper_interaction.stop()
+    # Quando sair do loop, chama a função stop() para finalizar corretamente
+    print("Finalizando pepper_interaction_and_motors...")
+    pepper_interaction_and_motors.stop()
 
     # Para o listener, se ainda estiver rodando
-    listener.stop()
+    if listener is not None:
+        listener.join()
 
 print("Programa encerrado.")
