@@ -28,7 +28,7 @@ def definir_emocao(emocao_usuario):
     emocao_mapeada = mapa_emocoes[emocao_usuario]
 
     # Caminho para o arquivo de emoção
-    caminho_arquivo = 'C:\\Users\\breno\\Documents\\_face animation\\emocao.txt'
+    caminho_arquivo = '..\\face_animation\\emocao.txt'
 
     # Escreve a emoção mapeada no arquivo
     with open(caminho_arquivo, 'w') as arquivo:
