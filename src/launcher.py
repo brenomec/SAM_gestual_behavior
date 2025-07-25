@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pepper_interaction_and_motors  # Importa o script onde as funções start, command e stop estão
+import face_expression_display
 from pynput import keyboard
 import time
 
@@ -48,6 +49,7 @@ try:
 
         # Chama a função command() para executar o comportamento do robô
         print("Executando comando com emoção '{}' por {} segundos...".format(emotion, time_interval))
+        face_expression_display.definir_emocao(emotion)
         pepper_interaction_and_motors.command(emotion, time_interval)
 
         # Intervalo entre execuções
