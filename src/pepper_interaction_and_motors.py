@@ -14,7 +14,7 @@ ADDR_GOAL_POSITION = 116
 PROTOCOL_VERSION = 1.0
 DXL_IDS = list(range(1, 16))  # ID 0 é slave, então excluído
 BAUDRATE = 57600
-DEVICENAME = 'COM7'
+DEVICENAME = 'COM5'
 TORQUE_ENABLE = 1
 TORQUE_DISABLE = 0
 
@@ -22,7 +22,7 @@ TORQUE_DISABLE = 0
 dynamixel_joint_map = {
     1: 10,  # KneePitch
     2: 9,   # HipPitch
-    3: 8,   # HipRoll
+    3: 8,   # HipRoll (INVERTIDO)
     4: 0,   # HeadYaw
     5: 1,   # HeadPitch
     6: 2,   # LShoulderPitch
@@ -30,7 +30,7 @@ dynamixel_joint_map = {
     8: 4,   # LElbowYaw
     9: 5,   # LElbowRoll
     10: 6,  # LWristYaw
-    11: 11, # RShoulderPitch (↩️ INVERTIDO)
+    11: 11, # RShoulderPitch (INVERTIDO)
     12: 12, # RShoulderRoll
     13: 13, # RElbowYaw
     14: 14, # RElbowRoll
@@ -94,8 +94,8 @@ def update_dynamixel_motors(motionProxy):
                 idx = dynamixel_joint_map.get(dxl_id)
                 if idx is not None:
                     angle = commandAngles[idx]
-                    # Corrigir sentido invertido do motor ID 11
-                    if dxl_id == 11:
+                    # Corrigir sentido invertido do motor ID 11 e 3
+                    if dxl_id in [3, 11]:  # HipRoll (3) e RShoulderPitch (11)
                         angle = -angle
                     radian_positions.append(angle)
             send_motor_positions(radian_positions)
